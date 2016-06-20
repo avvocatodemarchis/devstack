@@ -1,45 +1,50 @@
-Devstack Essentials
+# Devstack Essentials
 
-To start the OpenStack Cloud 
-	- open a putty session to devstack.corp.local (viouser/VMware123)
-	- cd in /home/viouser/devstack
-	- run ./stack.sh
+We setup this lab with as a single machine OpenStack deployment.
+
+## Start OpenStack Deployment
+	- open a putty session to devstack.corp.local
+	- use the credentials:
+		- /VMware123
+	- cd in `/home/viouser/devstack` folder
+	- run `./stack.sh`
 	- it takes around 20 minutes for the stack.sh script to complete.
+	- once the script is done, you can start using Devstack (see Credentials section below)
+## Stop the OpenStack Deployment
+	- **NOTE: do this before powering off the devstack.corp.local machine**
+	- open a putty session to devstack.corp.local
+	- use the credentials:
+		- _viouser_/VMware123
+	- cd in `/home/viouser/devstack` folder
+	- run `./unstack.sh`
 
-Openstack Services Enabled
+
+## Environment
+
+### Enabled Openstack Services
 	- neutron
 	- heat
 	- ceilometer
 	- gnocchi
-	- aodh 
+	- aodh
 
-To stop the OpenStack Cloud (NOTE: do this before powering off the devstack.corp.local machine)
-	- open a putty session to devstack.corp.local
-	- cd in /home/viouser/devstack
-	- run ./unstack.sh
+### OpenStack Credentials
 
-Devstack Host Machine Credentials
+  | Type | Username | Password |
+  | --- | --- | --- |
+  | Admin Account | _admin_ | vtsu
+  | User Account | _demo_ | vtsu
+
+### Openstack Command clients
+  - open a putty session to devstack.corp.local
+  - use the credentials:
+    - _viouser_/VMware123
+  - cd in `/home/viouser/devstack` folder
+    - run `source openrc`
+  - By default the sourcing `openrc` grants access as the _demo_ user. 
+
+### Devstack Host Machine Credentials
 	hostname: devstack.corp.local
 	IP: 192.168.110.100
-	login: viouser
+	login: _viouser_
 	password: VMware123
-
-OpenStack Cloud Credentials
- ___ 
-| 1 |user: admin
-|   |password: vtsu
-|---|--------------------------
-| 2 |user: demo
-|___|password: vtsu
-
-To use Openstack Command clients
-	- open a putty session to devstack.corp.local
-	- cd in /home/viouser/devstack
-    - run 'source openrc'
-
-This is your host IP address: 192.168.110.100
-This is your host IPv6 address: fe80::250:56ff:fe02:a62
-Horizon is now available at http://192.168.110.100/dashboard
-Keystone is serving at http://192.168.110.100/identity/
-The default users are: admin and demo
-The password: vtsu
