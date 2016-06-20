@@ -5,11 +5,12 @@ We setup this lab with as a single machine OpenStack deployment.
 ## Start OpenStack Deployment
 - open a putty session to devstack.corp.local
 - use the credentials:
-	- /VMware123
+	- _viouser_/VMware123
 - cd in `/home/viouser/devstack` folder
 - run `./stack.sh`
 - it takes around 20 minutes for the stack.sh script to complete.
 - once the script is done, you can start using Devstack (see Credentials section below)
+
 ## Stop the OpenStack Deployment
 - **NOTE: do this before powering off the devstack.corp.local machine**
 - open a putty session to devstack.corp.local
@@ -20,7 +21,6 @@ We setup this lab with as a single machine OpenStack deployment.
 
 
 ## Environment
-
 ### Enabled Openstack Services
 	- neutron
 	- heat
@@ -29,7 +29,6 @@ We setup this lab with as a single machine OpenStack deployment.
 	- aodh
 
 ### OpenStack Credentials
-
 | Type | Username | Password |
 | --- | --- | --- |
 | Admin Account | _admin_ | vtsu
