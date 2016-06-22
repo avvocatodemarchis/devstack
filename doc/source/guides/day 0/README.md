@@ -12,7 +12,7 @@ We setup this lab with as a single machine OpenStack deployment.
 - once the script is done, you can start using Devstack (see Credentials section below)
 
 ## Stop the OpenStack Deployment
-- **NOTE: do the follwoing steps BEFORE powering off the `devstack.corp.local machine`**
+- **NOTE: do the following steps BEFORE powering off the `devstack.corp.local machine`**
 - open a puTTY session to devstack.corp.local
 - use the credentials:
 	- _viouser_/VMware123
