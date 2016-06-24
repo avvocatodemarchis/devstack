@@ -1,0 +1,106 @@
+description: '
+
+  Version: 2014.1 This is a heat template for Mirantis OpenStack Training. It will
+  start the VM from cirros image, create the Cinder Volume  Attach the volume to the
+  created VM with specified block device name Create a Ceilometer alarm for CPU utilization
+  by this VM
+
+  '
+heat_template_version: '2013-05-23'
+outputs:
+  private_ip:
+    description: Allocated IP
+    value:
+      get_attr: [heat_vm, first_address]
+  vol_device:
+    value:
+      Fn::Join:
+      - ' '
+      - - Volume
+        - get_attr: [heat_volume, display_name]
+        - is attached to
+        - Fn::Select:
+          - name
+          - get_attr: [heat_vm, show]
+        - as
+        - {get_param: device_name}
+parameters:
+  device_name:
+    constraints:
+    - description: The block device name should consists of 3 characters
+      length: {max: 3, min: 3}
+    - {allowed_pattern: '[a-zA-Z0-9]{3}', description: The block device name must
+        consist of 3 characters and/or numbers only.}
+    default: vdc
+    description: The block device name to use for attached volume inside the VM
+    label: Device Name
+    type: string
+  network_id: {default: 20568979-02bf-48e3-8c77-44c70cb27085, description: UUID of
+      the VM network, label: vm_net, type: string}
+  vm_name:
+    constraints:
+    - description: VM name must be more then 2 characters, letter and numbers only.
+      length: {min: 2}
+    - {allowed_pattern: '[a-zA-Z0-9]+', description: VM name must consist of characters
+        and numbers only.}
+    description: The name to use for the VM
+    label: VM Name
+    type: string
+  vol_size:
+    constraints:
+    - description: Volume size must be between 1GB and 3GB
+      range: {max: 3, min: 1}
+    default: 1
+    description: The size of the volume to be created in GB
+    label: Volume Size
+    type: number
+resources:
+  heat_cpu_alarm:
+    properties:
+      alarm_actions: ['log://']
+      comparison_operator: ge
+      description: Instance running hot
+      evaluation_periods: '3'
+      matching_metadata:
+        resource_id: {get_resource: heat_vm}
+      meter_name: cpu_util
+      period: '600'
+      statistic: avg
+      threshold: '70.0'
+    type: OS::Ceilometer::Alarm
+  heat_vm:
+    properties:
+      flavor: m1.tiny
+      image: cirros-0.3.4-x86_64-uec
+      name: {get_param: vm_name}
+      networks:
+      - network: {get_param: network_id}
+      user_data:
+        str_replace:
+          params:
+            ${vm_password}: {get_param: vm_name}
+          template: '#!/bin/bash
+
+            echo "Hi ${vm_name}"
+
+            '
+    type: OS::Nova::Server
+  heat_volume:
+    properties:
+      name:
+        Fn::Join:
+        - _
+        - - {get_param: vm_name}
+          - heat_volume
+      size: {get_param: vol_size}
+    type: OS::Cinder::Volume
+  heat_volume_attached:
+    properties:
+      instance_uuid: {get_resource: heat_vm}
+      mountpoint:
+        Fn::Join:
+        - /
+        - - /dev
+          - {get_param: device_name}
+      volume_id: {get_resource: heat_volume}
+    type: OS::Cinder::VolumeAttachment
